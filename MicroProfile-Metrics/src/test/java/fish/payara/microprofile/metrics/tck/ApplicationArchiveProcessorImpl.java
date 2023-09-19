@@ -39,6 +39,7 @@
  */
 package fish.payara.microprofile.metrics.tck;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
@@ -60,5 +61,6 @@ public class ApplicationArchiveProcessorImpl implements ApplicationArchiveProces
         WebArchive webArchive = WebArchive.class.cast(archive);
         webArchive.addAsWebInfResource("beans.xml", "beans.xml");
         webArchive.addAsResource("system-properties.properties");
+        LOG.log(Level.INFO, "Virtually augmented web archive: \n {0}", webArchive.toString(true));
     }
 }

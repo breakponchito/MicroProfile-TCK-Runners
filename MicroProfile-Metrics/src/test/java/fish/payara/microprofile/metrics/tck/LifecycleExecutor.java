@@ -74,6 +74,7 @@ public class LifecycleExecutor {
             if (webArchive.contains("WEB-INF/beans.xml")) {
                 LOG.info("modify beans");
                 webArchive.addAsWebInfResource("beans.xml", "beans.xml");
+                webArchive.addAsResource("system-properties.properties");
             }
 
             for(Map.Entry<ArchivePath, Node> content : webArchive.getContent().entrySet()) {
@@ -83,10 +84,10 @@ public class LifecycleExecutor {
                         LOG.log(Level.INFO, "Virtually augmented content archive \n");
                         JavaArchive javaArchive = JavaArchive.class.cast(asset.getArchive());
                         javaArchive.addAsManifestResource("beans.xml");
-
                     }
                 }
             }
+            LOG.log(Level.INFO, "Virtually augmented web archive: \n {0}", webArchive.toString(true));
         }
     }
 }
