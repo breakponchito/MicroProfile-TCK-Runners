@@ -49,7 +49,6 @@
 
     <groupId>fish.payara.microprofile.metrics</groupId>
     <artifactId>metrics-tck</artifactId>
-    <packaging>jar</packaging>
 
     <name>MicroProfile Metrics TCK Runner</name>
 

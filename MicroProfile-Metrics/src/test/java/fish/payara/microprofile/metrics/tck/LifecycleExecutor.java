@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2023] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -39,26 +39,54 @@
  */
 package fish.payara.microprofile.metrics.tck;
 
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
+import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
+import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
+import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
  * @author ariekiswanto
+ *
  */
-public class ApplicationArchiveProcessorImpl implements ApplicationArchiveProcessor {
+public class LifecycleExecutor {
 
-    private static final Logger LOG = Logger.getLogger(ArquillianExtension.class.getName());
-    @Override
-    public void process(Archive<?> archive, TestClass testClass) {
-        LOG.info("preprocessing:"+archive.toString());
-        if (!(archive instanceof WebArchive)) {
-            return;
+    private static final Logger LOG = Logger.getLogger(LifecycleExecutor.class.getName());
+
+    /**
+     * Observes <code>BeforeDeploy</code> event to modify beans definition
+     * before deployment happen to prevent CDI deployment failure
+     * @param event
+     * @param testClass
+     */
+    public void executeBeforeDeploy(@Observes BeforeDeploy event, TestClass testClass) {
+       LOG.info("before deploy event: " + event.getDeployment().getArchive().getName());
+        Archive archive = event.getDeployment().getArchive();
+        if (archive instanceof WebArchive) {
+            WebArchive webArchive = WebArchive.class.cast(archive);
+            if (webArchive.contains("WEB-INF/beans.xml")) {
+                LOG.info("modify beans");
+                webArchive.addAsWebInfResource("beans.xml", "beans.xml");
+            }
+
+            for(Map.Entry<ArchivePath, Node> content : webArchive.getContent().entrySet()) {
+                if (content.getValue().getAsset() instanceof ArchiveAsset) {
+                    ArchiveAsset asset = (ArchiveAsset) content.getValue().getAsset();
+                    if (asset.getArchive().contains("META-INF/beans.xml")) {
+                        LOG.log(Level.INFO, "Virtually augmented content archive \n");
+                        JavaArchive javaArchive = JavaArchive.class.cast(asset.getArchive());
+                        javaArchive.addAsManifestResource("beans.xml");
+
+                    }
+                }
+            }
         }
-        WebArchive webArchive = WebArchive.class.cast(archive);
-        webArchive.addAsWebInfResource("beans.xml", "beans.xml");
-        webArchive.addAsResource("system-properties.properties");
     }
 }

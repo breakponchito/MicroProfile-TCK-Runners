@@ -55,6 +55,7 @@ public class ArquillianExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder extensionBuilder) {
         LOG.log(Level.INFO, "\n Registered Payara TCK ArquillianExtension \n");
-        extensionBuilder.service(ApplicationArchiveProcessor.class, ApplicationArchiveProcessorImpl.class);
+        extensionBuilder.service(ApplicationArchiveProcessor.class, ApplicationArchiveProcessorImpl.class)
+                .observer(LifecycleExecutor.class);
     }
 }
