@@ -54,20 +54,20 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Java Version Dependencies -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <!-- Arquillian Dependencies -->
-        <version.arquillian>1.9.5.Final</version.arquillian>
-        <payara.arquillian.container.version>4.0.alpha4</payara.arquillian.container.version>
+        <version.arquillian>1.7.0.Alpha14</version.arquillian>
+        <payara.arquillian.container.version>3.0.alpha8</payara.arquillian.container.version>
 
         <!-- Embedded Dependencies -->
         <shrinkwrap.version>3.3.4</shrinkwrap.version>
 
         <!-- Payara Dependencies -->
-        <payara.version>7.2026.3</payara.version>
-        <payara.home>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara7</payara.home>
-        <payara.microJar>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara7</payara.microJar>
+        <payara.version>6.41.0-SNAPSHOT</payara.version>
+        <payara.home>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara6</payara.home>
+        <payara.microJar>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara6</payara.microJar>
         <micro.randomPort>false</micro.randomPort>
 
         <payara-nexus-staging.repo.releases.enabled>false</payara-nexus-staging.repo.releases.enabled>
@@ -507,24 +507,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.13.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>fish.payara.arquillian</groupId>
-                <artifactId>payara-client-ee11</artifactId>
-                <version>${payara.arquillian.container.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse</groupId>
-                        <artifactId>yasson</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>fish.payara.arquillian</groupId>
-                <artifactId>environment-setup</artifactId>
-                <version>${payara.arquillian.container.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
